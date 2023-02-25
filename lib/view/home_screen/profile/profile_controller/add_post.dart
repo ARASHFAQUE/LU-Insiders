@@ -204,7 +204,7 @@ class _AddPostState extends State<AddPost> {
           deadlineDateController.text = jobDeadline;
         });
         
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfilePage(userID: currentUser.email.toString())));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfilePage(userID: _uid)));
       } catch(e){
         Fluttertoast.showToast(msg: e.toString());
       }
@@ -215,7 +215,7 @@ class _AddPostState extends State<AddPost> {
   }
 
   void getMyData() async{
-    final DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection("users-form-data").doc(FirebaseAuth.instance.currentUser!.email)
+    final DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection("users-form-data").doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
 
     setState(() {
@@ -252,8 +252,8 @@ class _AddPostState extends State<AddPost> {
           onPressed: (){
             final FirebaseAuth _auth = FirebaseAuth.instance;
             final User? user = _auth.currentUser;
-            final String? uid = user!.email;
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfilePage(userID: uid)));
+            final String _uid = user!.uid;
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfilePage(userID: user.uid)));
           },
         ),
       ),

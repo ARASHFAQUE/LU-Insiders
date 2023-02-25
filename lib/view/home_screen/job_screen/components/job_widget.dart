@@ -41,7 +41,7 @@ class _JobWidgetState extends State<JobWidget> {
   _deleteJobPost(){
     User? user = _auth.currentUser;
 
-    final _uemail = user!.email;
+    final _uid = user!.uid;
     showDialog(
       context: context,
       builder: (context){
@@ -50,7 +50,7 @@ class _JobWidgetState extends State<JobWidget> {
             TextButton(
               onPressed: () async{
                 try {
-                  if (widget.uploadedBy == _uemail) {
+                  if (widget.uploadedBy == _uid) {
                     await FirebaseFirestore.instance.collection("job-post-data")
                         .doc(widget.jobID).delete();
                     await Fluttertoast.showToast(
