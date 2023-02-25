@@ -113,7 +113,7 @@ class _FormInfoState extends State<FormInfo> {
           return AlertDialog(
             backgroundColor: Colors.white,
             title: const Text(
-              "Student or Alumni?",
+              "Current Status",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
