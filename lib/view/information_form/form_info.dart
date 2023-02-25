@@ -113,7 +113,7 @@ class _FormInfoState extends State<FormInfo> {
           return AlertDialog(
             backgroundColor: Colors.white,
             title: const Text(
-              "Current Status",
+              "Student or Alumni?",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -209,7 +209,7 @@ class _FormInfoState extends State<FormInfo> {
                                 },
                                 maxLines: 1,
                                 jobErrorText: "Can Not Be Empty",
-                                jobHintText: "Student or Alumni?",
+                                jobHintText: "Student or Alumni",
                                 jobHintTextColor: Colors.purple,
                                 jobTextFieldPrefixIcon: Icons.category,
                                 jobTextFieldPrefixIconColor: Colors.purple,

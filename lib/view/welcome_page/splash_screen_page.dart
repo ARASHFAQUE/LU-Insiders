@@ -26,11 +26,12 @@ class _SplashScreenPageState extends State<SplashScreenPage> with TickerProvider
     _loadingController.addListener(() {
       if(_loadingController.value > 0.9){
         _loadingController.stop();
-        if(loggedUser != null){
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>const WelcomePage()));
+        /*if(loggedUser != null){
           Navigator.push(context, MaterialPageRoute(builder: (_)=>const HomePage()));
         }else{
           Navigator.push(context, MaterialPageRoute(builder: (_)=>const WelcomePage()));
-        }
+        }*/
       }
     });
   }
