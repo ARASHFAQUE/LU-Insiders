@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ashfaque_project/view/home_screen/bottom_nav_bar.dart';
 import 'package:ashfaque_project/view/home_screen/profile/profile_controller/add_post.dart';
 import 'package:ashfaque_project/view/home_screen/profile/profile_controller/edit_profile_page.dart';
@@ -8,6 +10,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../main.dart';
+import '../chat_screen/chat_room.dart';
+import '../chat_screen/controller/chat_room_model.dart';
 
 class UserProfilePage extends StatefulWidget {
 
@@ -217,6 +223,50 @@ class _UserProfilePageState extends State<UserProfilePage> {
     );
   }
 
+  Future<ChatRoomModel?> getChatRoomModel(String targetUser) async{
+    ChatRoomModel? chatRoom;
+    User? user = _auth.currentUser;
+
+    final _uid = user!.uid;
+
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('chat-rooms')
+        .where("participants.${widget.userID}", isEqualTo: true)
+        .where("participants.$_uid", isEqualTo: true).get();
+
+    if(snapshot.docs.isNotEmpty){
+      // Fetch the existing one
+      var docData = snapshot.docs[0].data();
+      //print(docData.toString());
+      ChatRoomModel existingChatroom = ChatRoomModel.fromMap(docData as Map<String, dynamic>);
+
+      //print(existingChatroom.chatRoomId.toString());
+
+      chatRoom = existingChatroom;
+
+      log("Chatroom already exists.");
+    }
+    else{
+      // Create a new one
+      ChatRoomModel newChatroom = ChatRoomModel(
+        chatRoomId: uuid.v1(),
+        lastMessage: "",
+        participants: {
+          widget.userID.toString(): true,
+          _uid.toString(): true,
+        },
+      );
+      await FirebaseFirestore.instance.collection('chat-rooms').doc(newChatroom.chatRoomId)
+          .set(newChatroom.toMap());
+
+      chatRoom = newChatroom;
+
+      log("New Chatroom Created.");
+    }
+    //print(chatRoom.chatRoomId.toString());
+    return chatRoom;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -292,7 +342,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       buildAbout(about),
                       isSameId && studentOrAlumni == "Alumni"
                       ? Padding(
-                        padding: const EdgeInsets.only(left: 220),
+                        padding: EdgeInsets.only(left: size.width * 0.6),
                         child: SizedBox(
                           width: size.width * 0.3,
                           child: ClipRect(
@@ -320,7 +370,40 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           ),
                         ),
                       )
-                      : Container(),
+                      : Padding(
+                        padding: EdgeInsets.only(left: size.width * 0.6),
+                        child: SizedBox(
+                          width: size.width * 0.3,
+                          child: ClipRect(
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                                padding: MaterialStateProperty.all(
+                                    const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 10)),
+                                backgroundColor:
+                                MaterialStateProperty.all(Colors.purple),
+                              ),
+                              onPressed: () async {
+                                ChatRoomModel? chatRoomModel = await getChatRoomModel(widget.userID.toString());
+                                if(chatRoomModel != null){
+                                  // ignore: use_build_context_synchronously
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => ChatRoom(currentUser: _auth.currentUser!.uid.toString(), targetUser: widget.userID.toString(), chatroom: chatRoomModel, name: name, profilePic: imagePath)));
+                                }
+                                //Navigator.canPop(context) ? Navigator.pop(context) : null;
+                                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddPost(userId: email,)));
+                              },
+                              child: const Text(
+                                  "Chat",
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                            ),
+                          ),
+                        ),
+                      ),
                       dividerWidget(),
                     ],
                   ),
