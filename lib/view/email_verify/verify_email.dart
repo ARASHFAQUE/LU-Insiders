@@ -98,7 +98,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
                 textColor: Colors.white,
                 handleButtonClick: () {
                   FirebaseAuth.instance.signOut();
-                  Navigator.push(context, MaterialPageRoute(builder: (_)=>LogInPage()));
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => LogInPage()), (route) => false);
+                  //Navigator.push(context, MaterialPageRoute(builder: (_)=>LogInPage()));
                 }
               ),
             ],

@@ -27,7 +27,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       await _auth.sendPasswordResetEmail(
           email: forgetEmailController.text,
       );
-      Navigator.push(context, MaterialPageRoute(builder: (_) => LogInPage()));
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => LogInPage()), (route) => false);
+      //Navigator.push(context, MaterialPageRoute(builder: (_) => LogInPage()));
     } catch(e){
       Fluttertoast.showToast(msg: "Could Not Send Email");
     }
@@ -37,10 +38,32 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Forget Password"),
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.purpleAccent, Colors.purple],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                stops: [0.2, 0.9],
+              )
+          ),
+        ),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: (){
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => LogInPage()), (route) => false);
+            //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfilePage(userID: widget.userID)));
+          },
+        ),
+      ),
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 150),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 110),
             child: ListView(
               children: [
                 SizedBox(height: size.height * 0.1,),
