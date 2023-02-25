@@ -101,7 +101,7 @@ class _SearchProfileWidgetState extends State<SearchProfileWidget> {
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       child: ListTile(
         onTap: (){
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => UserProfilePage(userID: widget.email)), (route) => false);
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => UserProfilePage(userID: widget.userID)), (route) => false);
         },
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         leading: Container(
