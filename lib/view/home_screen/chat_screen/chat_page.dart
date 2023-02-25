@@ -81,7 +81,7 @@ class _ChatPageState extends State<ChatPage> {
                               UserModel targetUser = userData.data as UserModel;
 
                               return Container(
-                                height: size.height  * 0.1,
+                                height: size.height  * 0.14,
                                 margin: const EdgeInsets.symmetric(
                                   vertical: 5,
                                 ),
@@ -101,7 +101,7 @@ class _ChatPageState extends State<ChatPage> {
                                     backgroundImage: NetworkImage(targetUser.profilePic.toString()),
                                   ),
                                   title: Text(targetUser.name.toString()),
-                                  subtitle: (chatroomModel.lastMessage.toString() != "") ? Text(chatroomModel.lastMessage.toString())
+                                  subtitle: (chatroomModel.lastMessage.toString() != "") ? Text(chatroomModel.lastMessage.toString(), overflow: TextOverflow.visible,)
                                   : const Text("Say hi to your new friend!",
                                   style: TextStyle(color: Colors.blue)),
                                 ),
