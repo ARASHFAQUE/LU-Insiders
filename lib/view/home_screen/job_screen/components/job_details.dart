@@ -231,7 +231,7 @@ class _JobDetailsState extends State<JobDetails> {
                           )
                         ],
                       ),
-                      FirebaseAuth.instance.currentUser!.email != widget.uploadedBy
+                      FirebaseAuth.instance.currentUser!.uid.toString() != widget.uploadedBy
                       ? Container()
                       :
                       Column(
@@ -252,9 +252,9 @@ class _JobDetailsState extends State<JobDetails> {
                               TextButton(
                                 onPressed: (){
                                   User? user = _auth.currentUser;
-                                  final _uemail = user!.email;
+                                  final _uid = user!.uid.toString();
                                   
-                                  if(_uemail == widget.uploadedBy){
+                                  if(_uid == widget.uploadedBy){
                                     try{
                                       FirebaseFirestore.instance.collection("job-post-data")
                                           .doc(widget.jobID).update({
@@ -288,9 +288,9 @@ class _JobDetailsState extends State<JobDetails> {
                               TextButton(
                                 onPressed: (){
                                   User? user = _auth.currentUser;
-                                  final _uemail = user!.email;
+                                  final _uid = user!.uid.toString();
 
-                                  if(_uemail == widget.uploadedBy){
+                                  if(_uid == widget.uploadedBy){
                                     try{
                                       FirebaseFirestore.instance.collection("job-post-data")
                                           .doc(widget.jobID).update({
