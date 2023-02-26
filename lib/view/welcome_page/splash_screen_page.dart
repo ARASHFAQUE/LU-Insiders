@@ -59,7 +59,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> with TickerProvider
                     ..forward();
             },
           ),
-          const Text("LU INSIDER",
+          const Text("LU INSIDERS",
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black)
           ),
         ],
