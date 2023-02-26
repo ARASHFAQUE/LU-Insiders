@@ -62,8 +62,9 @@ class _SignUpState extends State<SignUp> {
 
       var authCredential = userCredential.user;
       if(authCredential!.uid.isNotEmpty){
+        //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>FormInfo()), (route) => false);
 
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>VerifyEmail()));
+        Navigator.push(context, MaterialPageRoute(builder: (_)=>FormInfo()));
         // await FirebaseAuth.instance.verifyPhoneNumber(
         //   phoneNumber: "+88${phone}",
         //   verificationCompleted: (PhoneAuthCredential credential) {},

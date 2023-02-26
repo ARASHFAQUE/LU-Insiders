@@ -40,6 +40,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
   String userID = "";
 
   bool isSameId = false;
+
+  String _uid = FirebaseAuth.instance.currentUser!.uid;
+
   
   void getUserData() async{
     try{
@@ -340,7 +343,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       dividerWidget(),
                       const SizedBox(height: 10),
                       buildAbout(about),
-                      isSameId && studentOrAlumni == "Alumni"
+                      _uid == userID && studentOrAlumni == "Alumni"
                       ? Padding(
                         padding: EdgeInsets.only(left: size.width * 0.6),
                         child: SizedBox(

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ashfaque_project/view/home_screen/job_screen/jobs_page.dart';
 import 'package:ashfaque_project/view/information_form/form_info.dart';
 import 'package:ashfaque_project/view/login/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -70,7 +71,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
 
   @override
   Widget build(BuildContext context) => isEmailVerified
-      ? FormInfo()
+      ? const HomePage()
       : Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16),

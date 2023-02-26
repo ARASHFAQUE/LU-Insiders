@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:ashfaque_project/view/email_verify/verify_email.dart';
 import 'package:ashfaque_project/view/id_password_text_fields/more_info.dart';
 import 'package:ashfaque_project/view/information_form/controller/gender_selection_controller.dart';
 import 'package:ashfaque_project/view/information_form/controller/info_form_up_controller.dart';
+import 'package:ashfaque_project/view/welcome_page/splash_screen_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -25,6 +27,7 @@ import '../welcome_page/components/custom_button.dart';
 
 class FormInfo extends StatefulWidget {
   FormInfo({Key? key}) : super(key: key);
+  static bool isFilled = false;
 
   @override
   State<FormInfo> createState() => _FormInfoState();
@@ -44,6 +47,7 @@ class _FormInfoState extends State<FormInfo> {
   InfoFormProfilePic infoFormProfilePic = InfoFormProfilePic();
   DateTime? pickedDate;
   String? _alumniOrStudent;
+
 
   final _formKey = GlobalKey<FormState>();
 
@@ -75,7 +79,7 @@ class _FormInfoState extends State<FormInfo> {
       "profilePic": imageDwnUrl,
       "createdAt": Timestamp.now(),
     },
-    ).then((value) => Navigator.push(context, MaterialPageRoute(builder: (_)=>const HomePage()))).catchError(
+    ).then((value) => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_)=>VerifyEmail()), (route) => false)).catchError(
             (error)=>print("Something is wrong"));
   }
 
@@ -336,6 +340,7 @@ class _FormInfoState extends State<FormInfo> {
                             textColor: Colors.white,
                             handleButtonClick: () async{
                               //uploadProfilePicture();
+                              //FormInfo.isFilled = true;
                               //img.value = await infoFormController.sendUserPicToDB();
                               sendUserDataToDB();
                             }),
