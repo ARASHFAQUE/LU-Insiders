@@ -32,39 +32,38 @@ class _SignUpState extends State<SignUp> {
 
   var phone = "";
 
-  passwordsCheck(BuildContext context){
-    if(passwordController.text.contains(' ') || confirmPasswordController.text.contains(' ')){
+  passwordsCheck(BuildContext context) {
+    if (passwordController.text.contains(' ') ||
+        confirmPasswordController.text.contains(' ')) {
       Fluttertoast.showToast(msg: "Space is not allowed.");
-    }
-    else if(passwordController.text.length < 8 && confirmPasswordController.text.length < 8){
-      Fluttertoast.showToast(msg: "Password must contain at least 8 characters.");
-    }
-    else if(passwordController.text.length >= 8 && confirmPasswordController.text.length < 8){
+    } else if (passwordController.text.length < 8 &&
+        confirmPasswordController.text.length < 8) {
+      Fluttertoast.showToast(
+          msg: "Password must contain at least 8 characters.");
+    } else if (passwordController.text.length >= 8 &&
+        confirmPasswordController.text.length < 8) {
       Fluttertoast.showToast(msg: "Passwords Don't Match!!");
-    }
-    else if(passwordController.text.length < 8 && confirmPasswordController.text.length >= 8){
+    } else if (passwordController.text.length < 8 &&
+        confirmPasswordController.text.length >= 8) {
       Fluttertoast.showToast(msg: "Passwords Don't Match!!");
-    }
-    else if(passwordController.text != confirmPasswordController.text){
+    } else if (passwordController.text != confirmPasswordController.text) {
       Fluttertoast.showToast(msg: "Passwords Don't Match!!");
-    }
-    else if(passwordController.text == confirmPasswordController.text){
+    } else if (passwordController.text == confirmPasswordController.text) {
       userSignUp(context);
     }
   }
 
-  userSignUp(context) async{
+  userSignUp(context) async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text
-      );
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: emailController.text, password: passwordController.text);
 
       var authCredential = userCredential.user;
-      if(authCredential!.uid.isNotEmpty){
+      if (authCredential!.uid.isNotEmpty) {
         //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>FormInfo()), (route) => false);
 
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>FormInfo()));
+        Navigator.push(context, MaterialPageRoute(builder: (_) => FormInfo()));
         // await FirebaseAuth.instance.verifyPhoneNumber(
         //   phoneNumber: "+88${phone}",
         //   verificationCompleted: (PhoneAuthCredential credential) {},
@@ -75,17 +74,15 @@ class _SignUpState extends State<SignUp> {
         //   },
         //   codeAutoRetrievalTimeout: (String verificationId) {},
         // );
-
-      }
-      else{
+      } else {
         Fluttertoast.showToast(msg: "Something is wrong");
       }
-
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         Fluttertoast.showToast(msg: "The password provided is too weak.");
       } else if (e.code == 'email-already-in-use') {
-        Fluttertoast.showToast(msg: "The account already exists for that email.");
+        Fluttertoast.showToast(
+            msg: "The account already exists for that email.");
       }
     } catch (e) {
       print(e);
@@ -140,18 +137,20 @@ class _SignUpState extends State<SignUp> {
         flexibleSpace: Container(
           decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.purpleAccent, Colors.purple],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                stops: [0.2, 0.9],
-              )
-          ),
+            colors: [Colors.purpleAccent, Colors.purple],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            stops: [0.2, 0.9],
+          )),
         ),
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: (){
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => WelcomePage()), (route) => false);
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => WelcomePage()),
+                (route) => false);
             //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => UserProfilePage(userID: widget.userID)), (route) => false);
             //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfilePage(userID: widget.userID)));
           },
@@ -162,10 +161,8 @@ class _SignUpState extends State<SignUp> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              "assets/images/undraw_signup.png",
-              width: size.width * 0.6
-            ),
+            Image.asset("assets/images/undraw_signup.png",
+                width: size.width * 0.6),
             const Text("Sign Up",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
             const SizedBox(height: 10),
@@ -182,34 +179,34 @@ class _SignUpState extends State<SignUp> {
                     onUserIdValueChange: (value) {})),
             TextFieldDecorator(
                 child: UserPassField(
-                    userPassController: passwordController,
-                    userPassErrorText: "Password must have at least 8 characters.",
-                    userPassHintText: "Enter Password",
-                    inputType: TextInputType.visiblePassword,
-                    userPassHintTextColor: Colors.purple,
-                    userPassTextFieldPrefixIcon: Icons.password,
-                    userPassTextFieldPrefixIconColor: Colors.purple,
-                    suffixIcon: Icons.visibility_off,
-                    suffixIconColor: Colors.purple,
-                    onUserPassValueChange: (value) {
-                      //print("Pass Value $value");
-                    },
-                  )),
+              userPassController: passwordController,
+              userPassErrorText: "Password must have at least 8 characters.",
+              userPassHintText: "Enter Password",
+              inputType: TextInputType.visiblePassword,
+              userPassHintTextColor: Colors.purple,
+              userPassTextFieldPrefixIcon: Icons.password,
+              userPassTextFieldPrefixIconColor: Colors.purple,
+              suffixIcon: Icons.visibility_off,
+              suffixIconColor: Colors.purple,
+              onUserPassValueChange: (value) {
+                //print("Pass Value $value");
+              },
+            )),
             TextFieldDecorator(
                 child: UserPassField(
-                  userPassController: confirmPasswordController,
-                  userPassErrorText: "Password must have at least 8 characters.",
-                  userPassHintText: "Re-enter Password",
-                  inputType: TextInputType.visiblePassword,
-                  userPassHintTextColor: Colors.purple,
-                  userPassTextFieldPrefixIcon: Icons.password,
-                  userPassTextFieldPrefixIconColor: Colors.purple,
-                  suffixIcon: Icons.visibility_off,
-                  suffixIconColor: Colors.purple,
-                  onUserPassValueChange: (value) {
-                    //print("Pass Value $value");
-                  },
-                )),
+              userPassController: confirmPasswordController,
+              userPassErrorText: "Password must have at least 8 characters.",
+              userPassHintText: "Re-enter Password",
+              inputType: TextInputType.visiblePassword,
+              userPassHintTextColor: Colors.purple,
+              userPassTextFieldPrefixIcon: Icons.password,
+              userPassTextFieldPrefixIconColor: Colors.purple,
+              suffixIcon: Icons.visibility_off,
+              suffixIconColor: Colors.purple,
+              onUserPassValueChange: (value) {
+                //print("Pass Value $value");
+              },
+            )),
             const SizedBox(height: 10),
             CustomButton(
                 buttonColor: MyTheme.signUpButtonColor,

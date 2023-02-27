@@ -41,21 +41,24 @@ class _FormInfoState extends State<FormInfo> {
   TextEditingController genderController = TextEditingController();
   TextEditingController companyController = TextEditingController();
   TextEditingController aboutController = TextEditingController();
-  GenderSelectionController genderSelectionController = Get.put(GenderSelectionController());
+  GenderSelectionController genderSelectionController =
+      Get.put(GenderSelectionController());
 
   InfoFormController infoFormController = Get.put(InfoFormController());
   InfoFormProfilePic infoFormProfilePic = InfoFormProfilePic();
   DateTime? pickedDate;
   String? _alumniOrStudent;
 
-
   final _formKey = GlobalKey<FormState>();
 
-  sendUserDataToDB() async{
+  sendUserDataToDB() async {
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child("ProfilePic")
+        .child(FirebaseAuth.instance.currentUser!.uid);
 
-    Reference ref = FirebaseStorage.instance.ref().child("ProfilePic").child(FirebaseAuth.instance.currentUser!.uid);
-
-    UploadTask uploadTask = ref.putFile(File(infoFormController.profilePicPath.value));
+    UploadTask uploadTask =
+        ref.putFile(File(infoFormController.profilePicPath.value));
 
     TaskSnapshot snapShot = await uploadTask;
     String imageDwnUrl = await snapShot.ref.getDownloadURL();
@@ -64,23 +67,28 @@ class _FormInfoState extends State<FormInfo> {
     var currentUser = _auth.currentUser;
     final _uid = currentUser!.uid;
 
-
-    CollectionReference collectionRef = FirebaseFirestore.instance.collection("users-form-data");
-    return collectionRef.doc(_uid).set({
-      "id": _uid,
-      "email": currentUser.email,
-      "studentOrAlumni": alumniOrStudentController.text,
-      "name": nameController.text,
-      "phone": mobileController.text,
-      "dob": birthDateController.text,
-      "gender": genderSelectionController.selectedGender.value,
-      "company": companyController.text,
-      "about": aboutController.text,
-      "profilePic": imageDwnUrl,
-      "createdAt": Timestamp.now(),
-    },
-    ).then((value) => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_)=>VerifyEmail()), (route) => false)).catchError(
-            (error)=>print("Something is wrong"));
+    CollectionReference collectionRef =
+        FirebaseFirestore.instance.collection("users-form-data");
+    return collectionRef
+        .doc(_uid)
+        .set(
+          {
+            "id": _uid,
+            "email": currentUser.email,
+            "studentOrAlumni": alumniOrStudentController.text,
+            "name": nameController.text,
+            "phone": mobileController.text,
+            "dob": birthDateController.text,
+            "gender": genderSelectionController.selectedGender.value,
+            "company": companyController.text,
+            "about": aboutController.text,
+            "profilePic": imageDwnUrl,
+            "createdAt": Timestamp.now(),
+          },
+        )
+        .then((value) => Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (_) => VerifyEmail()), (route) => false))
+        .catchError((error) => print("Something is wrong"));
   }
 
   @override
@@ -95,7 +103,7 @@ class _FormInfoState extends State<FormInfo> {
     aboutController.dispose();
   }
 
-  void _pickDateDialog() async{
+  void _pickDateDialog() async {
     pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -103,17 +111,18 @@ class _FormInfoState extends State<FormInfo> {
       lastDate: DateTime(2100),
     );
 
-    if(pickedDate != null){
+    if (pickedDate != null) {
       setState(() {
-        birthDateController.text = "${pickedDate!.day}-${pickedDate!.month}-${pickedDate!.year}";
+        birthDateController.text =
+            "${pickedDate!.day}-${pickedDate!.month}-${pickedDate!.year}";
       });
     }
   }
 
-  _showStudentOrAlumniDialog({required Size size}){
+  _showStudentOrAlumniDialog({required Size size}) {
     showDialog(
         context: context,
-        builder: (context){
+        builder: (context) {
           return AlertDialog(
             backgroundColor: Colors.white,
             title: const Text(
@@ -128,11 +137,12 @@ class _FormInfoState extends State<FormInfo> {
               child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: Persistent.alumniOrCurrent.length,
-                itemBuilder: (context, index){
+                itemBuilder: (context, index) {
                   return InkWell(
-                    onTap: (){
+                    onTap: () {
                       setState(() {
-                        alumniOrStudentController.text = Persistent.alumniOrCurrent[index];
+                        alumniOrStudentController.text =
+                            Persistent.alumniOrCurrent[index];
                       });
                       Navigator.pop(context);
                     },
@@ -143,14 +153,12 @@ class _FormInfoState extends State<FormInfo> {
                         // ),
                         Padding(
                           padding: const EdgeInsets.all(2.0),
-                          child: Text(
-                              Persistent.alumniOrCurrent[index],
+                          child: Text(Persistent.alumniOrCurrent[index],
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 15,
-                              )
-                          ),
+                              )),
                         ),
                       ],
                     ),
@@ -160,17 +168,14 @@ class _FormInfoState extends State<FormInfo> {
             ),
             actions: [
               TextButton(
-                onPressed: (){
+                onPressed: () {
                   Navigator.canPop(context) ? Navigator.pop(context) : null;
                 },
-                child: const Text(
-                    "Cancel",
-                    style: TextStyle(fontSize: 16)),
+                child: const Text("Cancel", style: TextStyle(fontSize: 16)),
               )
             ],
           );
-        }
-    );
+        });
   }
 
   @override
@@ -183,177 +188,179 @@ class _FormInfoState extends State<FormInfo> {
         flexibleSpace: Container(
           decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.purpleAccent, Colors.purple],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                stops: [0.2, 0.9],
-              )
-          ),
+            colors: [Colors.purpleAccent, Colors.purple],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            stops: [0.2, 0.9],
+          )),
         ),
       ),
       body: SignUpBackground(
-            child: Card(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Form(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
+          child: Card(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Form(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 10),
+                  InfoFormProfilePic(),
+                  TextFieldDecorator(
+                      child: GlobalFormTextField(
+                          valueKey: "Alumni Student",
+                          controller: alumniOrStudentController,
+                          enabled: false,
+                          fct: () {
+                            _showStudentOrAlumniDialog(size: size);
+                          },
+                          maxLines: 1,
+                          jobErrorText: "Can Not Be Empty",
+                          jobHintText: "Student or Alumni",
+                          jobHintTextColor: Colors.purple,
+                          jobTextFieldPrefixIcon: Icons.category,
+                          jobTextFieldPrefixIconColor: Colors.purple,
+                          inputType: TextInputType.text)),
+                  TextFieldDecorator(
+                      child: UserIdField(
+                          userIdController: nameController,
+                          maxLines: 1,
+                          userIdErrorText: "Name Can Not Be Empty",
+                          userIdHintText: "Enter Name",
+                          inputType: TextInputType.name,
+                          userIdHintTextColor: Colors.purple,
+                          userIdTextFieldPrefixIcon: Icons.person,
+                          userIdTextFieldPrefixIconColor: Colors.purple,
+                          onUserIdValueChange: (value) {})),
+                  TextFieldDecorator(
+                      child: UserIdField(
+                          userIdController: mobileController,
+                          maxLines: 1,
+                          userIdErrorText: "Phone No. Can Not Be Empty",
+                          userIdHintText: "Enter Phone Number",
+                          inputType: TextInputType.phone,
+                          userIdHintTextColor: Colors.purple,
+                          userIdTextFieldPrefixIcon: Icons.phone,
+                          userIdTextFieldPrefixIconColor: Colors.purple,
+                          onUserIdValueChange: (value) {})),
+                  TextFieldDecorator(
+                      child: GlobalFormTextField(
+                          valueKey: "Deadline Date",
+                          controller: birthDateController,
+                          enabled: false,
+                          fct: () {
+                            _pickDateDialog();
+                          },
+                          maxLines: 1,
+                          jobErrorText: "Date of Birth can not be empty",
+                          jobHintText: "Date of Birth(D-M-Y)",
+                          jobHintTextColor: Colors.purple,
+                          jobTextFieldPrefixIcon: Icons.date_range,
+                          jobTextFieldPrefixIconColor: Colors.purple,
+                          inputType: TextInputType.datetime)),
+                  TextFieldDecorator(
+                      child: UserIdField(
+                          userIdController: companyController,
+                          maxLines: 1,
+                          userIdErrorText: "Company Name",
+                          userIdHintText: "Company Name",
+                          inputType: TextInputType.text,
+                          userIdHintTextColor: Colors.purple,
+                          userIdTextFieldPrefixIcon: Icons.business,
+                          userIdTextFieldPrefixIconColor: Colors.purple,
+                          onUserIdValueChange: (value) {})),
+                  TextFieldDecorator(
+                      child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 15),
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 10),
-                        InfoFormProfilePic(),
-                        TextFieldDecorator(
-                            child: GlobalFormTextField(
-                                valueKey: "Alumni Student",
-                                controller: alumniOrStudentController,
-                                enabled: false,
-                                fct: (){
-                                  _showStudentOrAlumniDialog(size: size);
-                                },
-                                maxLines: 1,
-                                jobErrorText: "Can Not Be Empty",
-                                jobHintText: "Student or Alumni",
-                                jobHintTextColor: Colors.purple,
-                                jobTextFieldPrefixIcon: Icons.category,
-                                jobTextFieldPrefixIconColor: Colors.purple,
-                                inputType: TextInputType.text)),
-                        TextFieldDecorator(
-                            child: UserIdField(
-                                userIdController: nameController,
-                                maxLines: 1,
-                                userIdErrorText: "Name Can Not Be Empty",
-                                userIdHintText: "Enter Name",
-                                inputType: TextInputType.name,
-                                userIdHintTextColor: Colors.purple,
-                                userIdTextFieldPrefixIcon: Icons.person,
-                                userIdTextFieldPrefixIconColor: Colors.purple,
-                                onUserIdValueChange: (value) {})),
-                        TextFieldDecorator(
-                            child: UserIdField(
-                                userIdController: mobileController,
-                                maxLines: 1,
-                                userIdErrorText: "Phone No. Can Not Be Empty",
-                                userIdHintText: "Enter Phone Number",
-                                inputType: TextInputType.phone,
-                                userIdHintTextColor: Colors.purple,
-                                userIdTextFieldPrefixIcon: Icons.phone,
-                                userIdTextFieldPrefixIconColor: Colors.purple,
-                                onUserIdValueChange: (value) {})),
-                        TextFieldDecorator(
-                            child: GlobalFormTextField(
-                                valueKey: "Deadline Date",
-                                controller: birthDateController,
-                                enabled: false,
-                                fct: (){
-                                  _pickDateDialog();
-                                },
-                                maxLines: 1,
-                                jobErrorText: "Date of Birth can not be empty",
-                                jobHintText: "Date of Birth(D-M-Y)",
-                                jobHintTextColor: Colors.purple,
-                                jobTextFieldPrefixIcon: Icons.date_range,
-                                jobTextFieldPrefixIconColor: Colors.purple,
-                                inputType: TextInputType.datetime)),
-                        TextFieldDecorator(
-                            child: UserIdField(
-                                userIdController: companyController,
-                                maxLines: 1,
-                                userIdErrorText: "Company Name",
-                                userIdHintText: "Company Name",
-                                inputType: TextInputType.text,
-                                userIdHintTextColor: Colors.purple,
-                                userIdTextFieldPrefixIcon: Icons.business,
-                                userIdTextFieldPrefixIconColor: Colors.purple,
-                                onUserIdValueChange: (value) {})),
-                        TextFieldDecorator(child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Expanded(child:
-                                Text(
-                                    "Gender",
-                                    style: TextStyle(fontSize: 15,
+                        const Expanded(
+                          child: Text("Gender",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.purple)),
+                        ),
+                        Row(
+                          children: [
+                            Obx(() => Radio(
+                                  value: "Male",
+                                  groupValue: genderSelectionController
+                                      .selectedGender.value,
+                                  onChanged: (value) {
+                                    genderSelectionController
+                                        .onChangeGender(value);
+                                  },
+                                  activeColor: Colors.purple,
+                                  fillColor:
+                                      MaterialStateProperty.all(Colors.purple),
+                                )),
+                            const Text("Male",
+                                style: TextStyle(
+                                    fontSize: 15,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.purple)
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Obx(() => Radio(value: "Male",
-                                    groupValue: genderSelectionController.selectedGender.value,
-                                    onChanged: (value){
-                                      genderSelectionController.onChangeGender(value);
-                                    },
-                                    activeColor: Colors.purple,
-                                    fillColor: MaterialStateProperty.all(Colors.purple),
-                                    )
-                                  ),
-                                  const Text(
-                                      "Male",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.purple)
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Obx(() => Radio(value: "Female",
-                                    groupValue: genderSelectionController.selectedGender.value,
-                                    onChanged: (value){
-                                      genderSelectionController.onChangeGender(value);
-                                    },
-                                    activeColor: Colors.purple,
-                                    fillColor: MaterialStateProperty.all(Colors.purple),
-                                    )
-                                  ),
-                                  const Text(
-                                      "Female",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.purple)
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        )),
-                        TextFieldDecorator(
-                            child: UserIdField(
-                                userIdController: aboutController,
-                                userIdErrorText: "User Info",
-                                userIdHintText: "Write About Yourself",
-                                maxLines: 5,
-                                inputType: TextInputType.multiline,
-                                userIdHintTextColor: Colors.purple,
-                                userIdTextFieldPrefixIcon: Icons.description,
-                                userIdTextFieldPrefixIconColor: Colors.purple,
-                                onUserIdValueChange: (value) {})),
-                        const SizedBox(height: 10),
-                        CustomButton(
-                            buttonColor: MyTheme.signUpButtonColor,
-                            buttonText: "Continue",
-                            textColor: Colors.white,
-                            handleButtonClick: () async{
-                              //uploadProfilePicture();
-                              //FormInfo.isFilled = true;
-                              //img.value = await infoFormController.sendUserPicToDB();
-                              sendUserDataToDB();
-                            }),
+                                    color: Colors.purple)),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Obx(() => Radio(
+                                  value: "Female",
+                                  groupValue: genderSelectionController
+                                      .selectedGender.value,
+                                  onChanged: (value) {
+                                    genderSelectionController
+                                        .onChangeGender(value);
+                                  },
+                                  activeColor: Colors.purple,
+                                  fillColor:
+                                      MaterialStateProperty.all(Colors.purple),
+                                )),
+                            const Text("Female",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.purple)),
+                          ],
+                        )
                       ],
                     ),
-                  ),
-                ),
+                  )),
+                  TextFieldDecorator(
+                      child: UserIdField(
+                          userIdController: aboutController,
+                          userIdErrorText: "User Info",
+                          userIdHintText: "Write About Yourself",
+                          maxLines: 5,
+                          inputType: TextInputType.multiline,
+                          userIdHintTextColor: Colors.purple,
+                          userIdTextFieldPrefixIcon: Icons.description,
+                          userIdTextFieldPrefixIconColor: Colors.purple,
+                          onUserIdValueChange: (value) {})),
+                  const SizedBox(height: 10),
+                  CustomButton(
+                      buttonColor: MyTheme.signUpButtonColor,
+                      buttonText: "Continue",
+                      textColor: Colors.white,
+                      handleButtonClick: () async {
+                        //uploadProfilePicture();
+                        //FormInfo.isFilled = true;
+                        //img.value = await infoFormController.sendUserPicToDB();
+                        sendUserDataToDB();
+                      }),
+                ],
+              ),
             ),
-          )),
+          ),
+        ),
+      )),
     );
   }
 
-  // continueButtonClick(){
-  //   Navigator.push(context, MaterialPageRoute(builder: (builder)=>HomeScreen()));
-  // }
+// continueButtonClick(){
+//   Navigator.push(context, MaterialPageRoute(builder: (builder)=>HomeScreen()));
+// }
 }

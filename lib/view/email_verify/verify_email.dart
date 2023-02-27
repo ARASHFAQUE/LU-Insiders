@@ -33,7 +33,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
 
       timer = Timer.periodic(
         const Duration(seconds: 3),
-          (_) => checkEmailVerified(),
+            (_) => checkEmailVerified(),
       );
     }
   }
@@ -73,39 +73,39 @@ class _VerifyEmailState extends State<VerifyEmail> {
   Widget build(BuildContext context) => isEmailVerified
       ? const HomePage()
       : Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "A verification email has been sent to your email.",
-                style: TextStyle(fontSize: 20),
-                textAlign: TextAlign.center
-              ),
-              const SizedBox(height: 25),
-              CustomButton(
-                buttonColor: MyTheme.logInButtonColor,
-                buttonText: "Resent Email",
-                textColor: Colors.white,
-                handleButtonClick: () {
-                  canResendEmail ? sendVerificationEmail() : null;
-                }
-              ),
-              const SizedBox(height: 10),
-              CustomButton(
-                buttonColor: MyTheme.signUpButtonColor,
-                buttonText: "Cancel",
-                textColor: Colors.white,
-                handleButtonClick: () {
-                  FirebaseAuth.instance.signOut();
-                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => LogInPage()), (route) => false);
-                  //Navigator.push(context, MaterialPageRoute(builder: (_)=>LogInPage()));
-                }
-              ),
-            ],
+    body: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+              "A verification email has been sent to your email.",
+              style: TextStyle(fontSize: 20),
+              textAlign: TextAlign.center
           ),
-        ),
-      );
+          const SizedBox(height: 25),
+          CustomButton(
+              buttonColor: MyTheme.logInButtonColor,
+              buttonText: "Resent Email",
+              textColor: Colors.white,
+              handleButtonClick: () {
+                canResendEmail ? sendVerificationEmail() : null;
+              }
+          ),
+          const SizedBox(height: 10),
+          CustomButton(
+              buttonColor: MyTheme.signUpButtonColor,
+              buttonText: "Cancel",
+              textColor: Colors.white,
+              handleButtonClick: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => LogInPage()), (route) => false);
+                //Navigator.push(context, MaterialPageRoute(builder: (_)=>LogInPage()));
+              }
+          ),
+        ],
+      ),
+    ),
+  );
 
 }

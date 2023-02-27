@@ -75,12 +75,12 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-            colors: [Colors.purpleAccent, Colors.purple],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            stops: [0.2, 0.9],
-            )
+              gradient: LinearGradient(
+                colors: [Colors.purpleAccent, Colors.purple],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                stops: [0.2, 0.9],
+              )
           ),
         ),
         automaticallyImplyLeading: false,

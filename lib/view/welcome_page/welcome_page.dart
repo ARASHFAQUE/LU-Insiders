@@ -56,13 +56,14 @@ class _WelcomePageState extends State<WelcomePage> {
   logInButtonClickHandler(BuildContext context) {
     //print("Log In Clicked");
 
-    Navigator.push(
-        context, MaterialPageRoute(builder: (builder) => LogInPage()));
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LogInPage()), (route) => false);
+    //Navigator.push(context, MaterialPageRoute(builder: (builder) => LogInPage()));
   }
 
   signUpButtonClickHandler(BuildContext context) {
     //print("Sign Up Clicked");
     //Navigator.push(context, MaterialPageRoute(builder: (builder)=>SignUp()));
-    Navigator.push(context, MaterialPageRoute(builder: (builder)=> SignUp()));
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SignUp()), (route) => false);
+    //Navigator.push(context, MaterialPageRoute(builder: (builder)=> SignUp()));
   }
 }

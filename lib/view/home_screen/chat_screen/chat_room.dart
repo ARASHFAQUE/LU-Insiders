@@ -47,8 +47,8 @@ class _ChatRoomState extends State<ChatRoom> {
       );
 
       FirebaseFirestore.instance.collection('chat-rooms').doc(
-        widget.chatroom.chatRoomId).collection('messages')
-      .doc(newMessage.messageId).set(newMessage.toMap());
+          widget.chatroom.chatRoomId).collection('messages')
+          .doc(newMessage.messageId).set(newMessage.toMap());
 
       widget.chatroom.lastMessage = msg;
       FirebaseFirestore.instance.collection('chat-rooms').doc(
@@ -70,7 +70,7 @@ class _ChatRoomState extends State<ChatRoom> {
               ),
               const SizedBox(width: 10),
               Text(widget.name,
-              style: const TextStyle(fontSize: 16)),
+                  style: const TextStyle(fontSize: 16)),
             ],
           ),
           flexibleSpace: Container(
@@ -122,26 +122,25 @@ class _ChatRoomState extends State<ChatRoom> {
                                 MessageModel currentMessage = MessageModel.fromMap(dataSnapshot.docs[index].data() as Map<String, dynamic>);
                                 return Row(
                                   mainAxisAlignment: (currentMessage.sender == widget.currentUser)
-                                  ? MainAxisAlignment.end : MainAxisAlignment.start,
+                                      ? MainAxisAlignment.end : MainAxisAlignment.start,
                                   children: [
                                     Container(
-                                      margin: const EdgeInsets.symmetric(
-                                        vertical: 3,
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 10,
-                                        horizontal: 10
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: (currentMessage.sender == widget.currentUser) ? Colors.purple : Colors.grey.shade300,
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: Text(currentMessage.text.toString(),
-                                        style: TextStyle(
-                                          color: (currentMessage.sender == widget.currentUser) ? Colors.white : Colors.black,
-                                          fontSize: 16,
+                                        margin: const EdgeInsets.symmetric(
+                                          vertical: 3,
                                         ),
-                                      overflow: TextOverflow.ellipsis)
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10,
+                                            horizontal: 10
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: (currentMessage.sender == widget.currentUser) ? Colors.purple : Colors.grey.shade300,
+                                          borderRadius: BorderRadius.circular(5),
+                                        ),
+                                        child: Text(currentMessage.text.toString(),
+                                          style: TextStyle(
+                                            color: (currentMessage.sender == widget.currentUser) ? Colors.white : Colors.black,
+                                            fontSize: 16,
+                                          ),)
                                     ),
                                   ],
                                 );
@@ -172,8 +171,8 @@ class _ChatRoomState extends State<ChatRoom> {
                 Container(
                   color: Colors.white,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 5
+                      horizontal: 15,
+                      vertical: 5
                   ),
                   child: Row(
                     children: [
@@ -182,8 +181,8 @@ class _ChatRoomState extends State<ChatRoom> {
                           controller: messageController,
                           maxLines: null,
                           decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Send a Message"
+                              border: InputBorder.none,
+                              hintText: "Send a Message"
                           ),
                         ),
                       ),

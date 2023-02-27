@@ -43,7 +43,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   String _uid = FirebaseAuth.instance.currentUser!.uid;
 
-  
+
   void getUserData() async{
     try{
       final DocumentSnapshot userDoc = await FirebaseFirestore.instance
@@ -306,7 +306,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     children: [
                       const SizedBox(height: 25),
                       isSameId
-                      ? Align(
+                          ? Align(
                         alignment: Alignment.center,
                         child: Stack(
                           //alignment: Alignment.center,
@@ -329,7 +329,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           ],
                         ),
                       )
-                      : Align(
+                          : Align(
                         alignment: Alignment.center,
                         child: CircleAvatar(
                           backgroundImage: NetworkImage(imagePath),
@@ -343,8 +343,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       dividerWidget(),
                       const SizedBox(height: 10),
                       buildAbout(about),
-                      _uid == userID && studentOrAlumni == "Alumni"
-                      ? Padding(
+                      _uid == userID
+                          ? Padding(
                         padding: EdgeInsets.only(left: size.width * 0.6),
                         child: SizedBox(
                           width: size.width * 0.3,
@@ -373,7 +373,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           ),
                         ),
                       )
-                      : const Text(""),
+                          : const Text(""),
                       dividerWidget(),
                     ],
                   ),
@@ -386,47 +386,47 @@ class _UserProfilePageState extends State<UserProfilePage> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: isSameId
-                  ? Container(
-                    alignment: Alignment.center,
-                    child: SizedBox(
-                      width: size.width * 0.5,
-                      child: ClipRect(
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20))),
-                            padding: MaterialStateProperty.all(
-                                const EdgeInsets.symmetric(
-                                    vertical: 7, horizontal: 7)),
-                            backgroundColor:
-                            MaterialStateProperty.all(Colors.black),
-                          ),
-                          onPressed: () {
-                            _logOutFromApp(context);
-                          },
-                          child: Row(
-                            children: const [
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text(
-                                    "Sign Out",
-                                    style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white)),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Icon(Icons.logout, size: 36, color: Colors.white,),
-                              ),
-                            ],
-                          ),
-
+                    ? Container(
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                    width: size.width * 0.5,
+                    child: ClipRect(
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20))),
+                          padding: MaterialStateProperty.all(
+                              const EdgeInsets.symmetric(
+                                  vertical: 7, horizontal: 7)),
+                          backgroundColor:
+                          MaterialStateProperty.all(Colors.black),
                         ),
+                        onPressed: () {
+                          _logOutFromApp(context);
+                        },
+                        child: Row(
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                  "Sign Out",
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(Icons.logout, size: 36, color: Colors.white,),
+                            ),
+                          ],
+                        ),
+
                       ),
                     ),
-                  )
-                  : Container(),
+                  ),
+                )
+                    : Container(),
               ),
             ),
             const SizedBox(height: 10),
