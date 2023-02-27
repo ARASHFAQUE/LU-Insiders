@@ -373,40 +373,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           ),
                         ),
                       )
-                      : Padding(
-                        padding: EdgeInsets.only(left: size.width * 0.6),
-                        child: SizedBox(
-                          width: size.width * 0.3,
-                          child: ClipRect(
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20))),
-                                padding: MaterialStateProperty.all(
-                                    const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 10)),
-                                backgroundColor:
-                                MaterialStateProperty.all(Colors.purple),
-                              ),
-                              onPressed: () async {
-                                ChatRoomModel? chatRoomModel = await getChatRoomModel(widget.userID.toString());
-                                if(chatRoomModel != null){
-                                  // ignore: use_build_context_synchronously
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => ChatRoom(currentUser: _auth.currentUser!.uid.toString(), targetUser: widget.userID.toString(), chatroom: chatRoomModel, name: name, profilePic: imagePath)));
-                                }
-                                //Navigator.canPop(context) ? Navigator.pop(context) : null;
-                                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddPost(userId: email,)));
-                              },
-                              child: const Text(
-                                  "Chat",
-                                  style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white)),
-                            ),
-                          ),
-                        ),
-                      ),
+                      : const Text(""),
                       dividerWidget(),
                     ],
                   ),

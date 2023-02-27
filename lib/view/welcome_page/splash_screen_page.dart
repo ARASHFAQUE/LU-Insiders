@@ -21,6 +21,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> with TickerProvider
   User? loggedUser = FirebaseAuth.instance.currentUser;
 
 
+  bool isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
 
   @override
   void initState() {
@@ -32,7 +33,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> with TickerProvider
       if(_loadingController.value > 0.9){
         _loadingController.stop();
         //Navigator.push(context, MaterialPageRoute(builder: (_)=>const WelcomePage()));
-        if(loggedUser != null){
+        if(loggedUser != null && isEmailVerified == true){
           Navigator.push(context, MaterialPageRoute(builder: (_)=> const HomePage()));
         }
         else{

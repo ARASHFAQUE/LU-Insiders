@@ -336,7 +336,7 @@ class _FormInfoState extends State<FormInfo> {
                         const SizedBox(height: 10),
                         CustomButton(
                             buttonColor: MyTheme.signUpButtonColor,
-                            buttonText: "Submit",
+                            buttonText: "Continue",
                             textColor: Colors.white,
                             handleButtonClick: () async{
                               //uploadProfilePicture();

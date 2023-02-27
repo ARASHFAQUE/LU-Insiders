@@ -140,7 +140,8 @@ class _ChatRoomState extends State<ChatRoom> {
                                         style: TextStyle(
                                           color: (currentMessage.sender == widget.currentUser) ? Colors.white : Colors.black,
                                           fontSize: 16,
-                                        ),)
+                                        ),
+                                      overflow: TextOverflow.ellipsis)
                                     ),
                                   ],
                                 );

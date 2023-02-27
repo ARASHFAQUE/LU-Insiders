@@ -15,7 +15,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
 
   final TextEditingController _searchProfileController = TextEditingController();
-  String searchQuery = "Leading";
+  String searchQuery = "Yawn";
 
   Widget _buildSearchField(){
     return Padding(
@@ -56,7 +56,7 @@ class _SearchPageState extends State<SearchPage> {
   void _clearSearchField(){
     setState(() {
       _searchProfileController.clear();
-      updateSearchField("Leading");
+      updateSearchField("Yawn");
     });
   }
 
