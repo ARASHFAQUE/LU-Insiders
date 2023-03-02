@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:ashfaque_project/view/home_screen/bottom_nav_bar.dart';
+import 'package:ashfaque_project/view/home_screen/chat_screen/chat_room_screen.dart';
 import 'package:ashfaque_project/view/home_screen/profile/profile_controller/add_post.dart';
 import 'package:ashfaque_project/view/home_screen/profile/profile_controller/edit_profile_page.dart';
 import 'package:ashfaque_project/view/home_screen/profile/profile_controller/numbers_widget.dart';
@@ -232,6 +233,54 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
     final _uid = user!.uid;
 
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('chats')
+        .doc(_uid).collection('chat-rooms')
+        .where("participants.$targetUser", isEqualTo: true)
+        .where("participants.$_uid", isEqualTo: true)
+        .get();
+
+    if(snapshot.docs.isNotEmpty){
+      // Fetch the existing one
+      var docData = snapshot.docs[0].data();
+      //print(docData.toString());
+      ChatRoomModel existingChatroom = ChatRoomModel.fromMap(docData as Map<String, dynamic>);
+
+      //print(existingChatroom.chatRoomId.toString());
+
+      chatRoom = existingChatroom;
+
+      log("Chatroom already exists.");
+    }
+    else{
+      // Create a new one
+      ChatRoomModel newChatroom = ChatRoomModel(
+        chatRoomId: uuid.v1(),
+        lastMessage: "",
+        participants: {
+          widget.userID.toString(): true,
+          _uid.toString(): true,
+        },
+      );
+      await FirebaseFirestore.instance.collection('chats').doc(_uid).collection('chat-rooms').doc(newChatroom.chatRoomId)
+          .set(newChatroom.toMap());
+
+      await FirebaseFirestore.instance.collection('chats').doc(widget.userID).collection('chat-rooms').doc(newChatroom.chatRoomId)
+          .set(newChatroom.toMap());
+
+      chatRoom = newChatroom;
+
+      log("New Chatroom Created.");
+    }
+    //print(chatRoom.chatRoomId.toString());
+    return chatRoom;
+  }
+
+  /*Future<ChatRoomModel?> getChatRoomModel(String targetUser) async{
+    ChatRoomModel? chatRoom;
+    User? user = _auth.currentUser;
+
+    final _uid = user!.uid;
+
     QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('chat-rooms')
         .where("participants.${widget.userID}", isEqualTo: true)
         .where("participants.$_uid", isEqualTo: true).get();
@@ -267,7 +316,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     }
     //print(chatRoom.chatRoomId.toString());
     return chatRoom;
-  }
+  }*/
 
 
   @override
@@ -392,7 +441,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 ChatRoomModel? chatRoomModel = await getChatRoomModel(widget.userID.toString());
                                 if(chatRoomModel != null){
                                   // ignore: use_build_context_synchronously
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => ChatRoom(currentUser: _uid, targetUser: widget.userID.toString(), chatroom: chatRoomModel, name: name, profilePic: imagePath)));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => ChatRoomScreen(currentUser: _uid, targetUser: widget.userID.toString(), chatroom: chatRoomModel, name: name, profilePic: imagePath)));
                                 }
                               },
                               child: const Text(
