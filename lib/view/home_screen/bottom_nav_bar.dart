@@ -97,8 +97,8 @@ class BottomNavBarForApp extends StatelessWidget {
           final FirebaseAuth _auth = FirebaseAuth.instance;
           final User? user = _auth.currentUser;
           final String? uid = user!.uid;
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatPageScreen(currentUser: uid.toString())));
-          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatPage(currentUser: uid.toString())));
+          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatPageScreen(currentUser: uid.toString())));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatPage(currentUser: uid.toString())));
         }
 
         else if(index == 3){

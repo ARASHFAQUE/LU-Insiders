@@ -108,7 +108,7 @@ class _SearchPageState extends State<SearchPage> {
                   var currentUser = _auth.currentUser;
                   final _uid = currentUser!.uid;
                   //String? currentUser = FirebaseAuth.instance.currentUser!.email.toString();
-                  return ProfileSearchWidget(
+                  return SearchProfileWidget(
                     userID: snapshot.data!.docs[index]['id'],
                     name: snapshot.data!.docs[index]['name'],
                     email: snapshot.data!.docs[index]['email'],

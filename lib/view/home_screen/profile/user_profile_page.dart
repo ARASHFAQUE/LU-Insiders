@@ -227,7 +227,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     );
   }
 
-  Future<ChatRoomModel?> getChatRoomModel(String targetUser) async{
+  /*Future<ChatRoomModel?> getChatRoomModel(String targetUser) async{
     ChatRoomModel? chatRoom;
     User? user = _auth.currentUser;
 
@@ -273,9 +273,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
     }
     //print(chatRoom.chatRoomId.toString());
     return chatRoom;
-  }
+  }*/
 
-  /*Future<ChatRoomModel?> getChatRoomModel(String targetUser) async{
+  Future<ChatRoomModel?> getChatRoomModel(String targetUser) async{
     ChatRoomModel? chatRoom;
     User? user = _auth.currentUser;
 
@@ -316,7 +316,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     }
     //print(chatRoom.chatRoomId.toString());
     return chatRoom;
-  }*/
+  }
 
 
   @override
@@ -441,7 +441,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 ChatRoomModel? chatRoomModel = await getChatRoomModel(widget.userID.toString());
                                 if(chatRoomModel != null){
                                   // ignore: use_build_context_synchronously
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => ChatRoomScreen(currentUser: _uid, targetUser: widget.userID.toString(), chatroom: chatRoomModel, name: name, profilePic: imagePath)));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => ChatRoom(currentUser: _uid, targetUser: widget.userID.toString(), chatroom: chatRoomModel, name: name, profilePic: imagePath)));
                                 }
                               },
                               child: const Text(
