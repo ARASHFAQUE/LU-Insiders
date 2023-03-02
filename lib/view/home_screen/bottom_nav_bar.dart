@@ -1,4 +1,5 @@
 import 'package:ashfaque_project/view/home_screen/chat_screen/chat_page.dart';
+import 'package:ashfaque_project/view/home_screen/chat_screen/chat_page_screen.dart';
 import 'package:ashfaque_project/view/home_screen/more/more_page.dart';
 import 'package:ashfaque_project/view/home_screen/profile/user_profile_page.dart';
 import 'package:ashfaque_project/view/home_screen/profile/user_state.dart';
@@ -96,7 +97,8 @@ class BottomNavBarForApp extends StatelessWidget {
           final FirebaseAuth _auth = FirebaseAuth.instance;
           final User? user = _auth.currentUser;
           final String? uid = user!.uid;
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatPage(currentUser: uid.toString())));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatPageScreen(currentUser: uid.toString())));
+          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatPage(currentUser: uid.toString())));
         }
 
         else if(index == 3){

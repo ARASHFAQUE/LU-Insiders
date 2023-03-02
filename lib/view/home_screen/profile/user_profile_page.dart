@@ -346,6 +346,35 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       _uid == userID
                           ? Padding(
                         padding: EdgeInsets.only(left: size.width * 0.6),
+                          child: SizedBox(
+                            width: size.width * 0.3,
+                            child: ClipRect(
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20))),
+                                  padding: MaterialStateProperty.all(
+                                      const EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 10)),
+                                  backgroundColor:
+                                  MaterialStateProperty.all(Colors.purple),
+                                ),
+                                onPressed: () {
+                                  Navigator.canPop(context) ? Navigator.pop(context) : null;
+                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddPost(userId: email,)));
+                                },
+                                child: const Text(
+                                    "Add Post",
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white)),
+                              ),
+                            ),
+                          ),
+                        )
+                        : Padding(
+                        padding: EdgeInsets.only(left: size.width * 0.6),
                         child: SizedBox(
                           width: size.width * 0.3,
                           child: ClipRect(
@@ -359,12 +388,15 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 backgroundColor:
                                 MaterialStateProperty.all(Colors.purple),
                               ),
-                              onPressed: () {
-                                Navigator.canPop(context) ? Navigator.pop(context) : null;
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddPost(userId: email,)));
+                              onPressed: () async {
+                                ChatRoomModel? chatRoomModel = await getChatRoomModel(widget.userID.toString());
+                                if(chatRoomModel != null){
+                                  // ignore: use_build_context_synchronously
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => ChatRoom(currentUser: _uid, targetUser: widget.userID.toString(), chatroom: chatRoomModel, name: name, profilePic: imagePath)));
+                                }
                               },
                               child: const Text(
-                                  "Add Post",
+                                  "Chat",
                                   style: TextStyle(
                                       fontSize: 22,
                                       fontWeight: FontWeight.bold,
@@ -372,8 +404,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                             ),
                           ),
                         ),
-                      )
-                          : const Text(""),
+                      ),
                       dividerWidget(),
                     ],
                   ),

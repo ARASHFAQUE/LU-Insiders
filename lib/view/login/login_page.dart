@@ -63,7 +63,7 @@ class _LogInPageState extends State<LogInPage> {
         Fluttertoast.showToast(msg: "Wrong password provided for that user.");
       }
     } catch (e) {
-      print(e);
+      //print(e);
     }
   }
 

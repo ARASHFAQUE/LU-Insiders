@@ -79,7 +79,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text(
-              "A verification email has been sent to your email.",
+              "A verification email has been sent to your email address.",
               style: TextStyle(fontSize: 20),
               textAlign: TextAlign.center
           ),

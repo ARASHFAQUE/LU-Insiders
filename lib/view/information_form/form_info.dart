@@ -4,6 +4,7 @@ import 'package:ashfaque_project/view/email_verify/verify_email.dart';
 import 'package:ashfaque_project/view/id_password_text_fields/more_info.dart';
 import 'package:ashfaque_project/view/information_form/controller/gender_selection_controller.dart';
 import 'package:ashfaque_project/view/information_form/controller/info_form_up_controller.dart';
+import 'package:ashfaque_project/view/signup/signup.dart';
 import 'package:ashfaque_project/view/welcome_page/splash_screen_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,8 +27,10 @@ import '../signup/components/signup_background.dart';
 import '../welcome_page/components/custom_button.dart';
 
 class FormInfo extends StatefulWidget {
-  FormInfo({Key? key}) : super(key: key);
-  static bool isFilled = false;
+  String signUpEmail;
+  String signUpPassword;
+
+  FormInfo({required this.signUpEmail, required this.signUpPassword});
 
   @override
   State<FormInfo> createState() => _FormInfoState();
@@ -50,6 +53,53 @@ class _FormInfoState extends State<FormInfo> {
   String? _alumniOrStudent;
 
   final _formKey = GlobalKey<FormState>();
+
+  void numberValidation(BuildContext context){
+    if(!RegExp(r'^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$').hasMatch(mobileController.text)){
+      Fluttertoast.showToast(msg: "Enter a Valid Phone Number");
+    }
+    else{
+      userSignUp(context);
+    }
+  }
+
+
+  userSignUp(context) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: widget.signUpEmail, password: widget.signUpPassword);
+
+      var authCredential = userCredential.user;
+      if (authCredential!.uid.isNotEmpty) {
+        sendUserDataToDB();
+        //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>FormInfo()), (route) => false);
+
+        //Navigator.push(context, MaterialPageRoute(builder: (_) => FormInfo()));
+        // await FirebaseAuth.instance.verifyPhoneNumber(
+        //   phoneNumber: "+88${phone}",
+        //   verificationCompleted: (PhoneAuthCredential credential) {},
+        //   verificationFailed: (FirebaseAuthException e) {},
+        //   codeSent: (String verificationId, int? resendToken) {
+        //     SignUp.verify = verificationId;
+        //     Navigator.push(context, MaterialPageRoute(builder: (_)=>PhoneNumberVerify()));
+        //   },
+        //   codeAutoRetrievalTimeout: (String verificationId) {},
+        // );
+      } else {
+        Fluttertoast.showToast(msg: "Something is wrong");
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        Fluttertoast.showToast(msg: "The password provided is too weak.");
+      } else if (e.code == 'email-already-in-use') {
+        Fluttertoast.showToast(
+            msg: "The account already exists for that email.");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   sendUserDataToDB() async {
     Reference ref = FirebaseStorage.instance
@@ -108,7 +158,7 @@ class _FormInfoState extends State<FormInfo> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1800),
-      lastDate: DateTime(2100),
+      lastDate: DateTime.now(),
     );
 
     if (pickedDate != null) {
@@ -194,12 +244,22 @@ class _FormInfoState extends State<FormInfo> {
             stops: [0.2, 0.9],
           )),
         ),
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: (){
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SignUp()), (route) => false);
+              //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => UserProfilePage(userID: widget.userID)), (route) => false);
+              //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserProfilePage(userID: widget.userID)));
+            },
+          )
       ),
       body: SignUpBackground(
-          child: Card(
+        child: Card(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Form(
+            key: _formKey,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Column(
@@ -272,9 +332,8 @@ class _FormInfoState extends State<FormInfo> {
                           onUserIdValueChange: (value) {})),
                   TextFieldDecorator(
                       child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 15),
-                    child: Row(
+                      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 15),
+                      child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Expanded(
@@ -349,7 +408,8 @@ class _FormInfoState extends State<FormInfo> {
                         //uploadProfilePicture();
                         //FormInfo.isFilled = true;
                         //img.value = await infoFormController.sendUserPicToDB();
-                        sendUserDataToDB();
+                        //sendUserDataToDB();
+                        userSignUp(context);
                       }),
                 ],
               ),

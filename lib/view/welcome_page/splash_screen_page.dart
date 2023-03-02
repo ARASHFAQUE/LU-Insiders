@@ -1,3 +1,4 @@
+import 'package:ashfaque_project/view/email_verify/verify_email.dart';
 import 'package:ashfaque_project/view/information_form/form_info.dart';
 import 'package:ashfaque_project/view/welcome_page/welcome_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,7 +22,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> with TickerProvider
   User? loggedUser = FirebaseAuth.instance.currentUser;
 
 
-  //bool isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+  bool isEmailVerified = false;
 
   @override
   void initState() {
@@ -34,10 +35,19 @@ class _SplashScreenPageState extends State<SplashScreenPage> with TickerProvider
         _loadingController.stop();
         //Navigator.push(context, MaterialPageRoute(builder: (_)=>const WelcomePage()));
         if(loggedUser != null){
-          Navigator.push(context, MaterialPageRoute(builder: (_)=> const HomePage()));
+          isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+          if(isEmailVerified == true){
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_)=> const HomePage()), (route) => false);
+            //Navigator.push(context, MaterialPageRoute(builder: (_)=> const HomePage()));
+          }
+          else{
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_)=> const WelcomePage()), (route) => false);
+            //Navigator.push(context, MaterialPageRoute(builder: (_)=> const HomePage()));
+          }
         }
         else{
-          Navigator.push(context, MaterialPageRoute(builder: (_)=>const WelcomePage()));
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_)=> const WelcomePage()), (route) => false);
+          //Navigator.push(context, MaterialPageRoute(builder: (_)=>const WelcomePage()));
         }
       }
     });

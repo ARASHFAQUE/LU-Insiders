@@ -29,10 +29,19 @@ class _SignUpState extends State<SignUp> {
   TextEditingController mobileController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   var phone = "";
 
-  passwordsCheck(BuildContext context) {
+  emailCheck(BuildContext context){
+    if(emailController.text == "" || emailController.text.contains(' ') || !emailController.text.contains('@')){
+      Fluttertoast.showToast(msg: "Enter an valid email.");
+    }else{
+      passwordCheck(context);
+    }
+  }
+
+  passwordCheck(BuildContext context) {
     if (passwordController.text.contains(' ') ||
         confirmPasswordController.text.contains(' ')) {
       Fluttertoast.showToast(msg: "Space is not allowed.");
@@ -49,7 +58,8 @@ class _SignUpState extends State<SignUp> {
     } else if (passwordController.text != confirmPasswordController.text) {
       Fluttertoast.showToast(msg: "Passwords Don't Match!!");
     } else if (passwordController.text == confirmPasswordController.text) {
-      userSignUp(context);
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>FormInfo(signUpEmail: emailController.text, signUpPassword: passwordController.text,)), (route) => false);
+      //userSignUp(context);
     }
   }
 
@@ -63,7 +73,7 @@ class _SignUpState extends State<SignUp> {
       if (authCredential!.uid.isNotEmpty) {
         //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>FormInfo()), (route) => false);
 
-        Navigator.push(context, MaterialPageRoute(builder: (_) => FormInfo()));
+        //Navigator.push(context, MaterialPageRoute(builder: (_) => FormInfo()));
         // await FirebaseAuth.instance.verifyPhoneNumber(
         //   phoneNumber: "+88${phone}",
         //   verificationCompleted: (PhoneAuthCredential credential) {},
@@ -166,54 +176,67 @@ class _SignUpState extends State<SignUp> {
             const Text("Sign Up",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
             const SizedBox(height: 10),
-            TextFieldDecorator(
-                child: UserIdField(
-                    userIdController: emailController,
-                    maxLines: 1,
-                    userIdErrorText: "Please enter a valid Email address.",
-                    userIdHintText: "Enter Email",
-                    inputType: TextInputType.emailAddress,
-                    userIdHintTextColor: Colors.purple,
-                    userIdTextFieldPrefixIcon: Icons.email,
-                    userIdTextFieldPrefixIconColor: Colors.purple,
-                    onUserIdValueChange: (value) {})),
-            TextFieldDecorator(
-                child: UserPassField(
-              userPassController: passwordController,
-              userPassErrorText: "Password must have at least 8 characters.",
-              userPassHintText: "Enter Password",
-              inputType: TextInputType.visiblePassword,
-              userPassHintTextColor: Colors.purple,
-              userPassTextFieldPrefixIcon: Icons.password,
-              userPassTextFieldPrefixIconColor: Colors.purple,
-              suffixIcon: Icons.visibility_off,
-              suffixIconColor: Colors.purple,
-              onUserPassValueChange: (value) {
-                //print("Pass Value $value");
-              },
-            )),
-            TextFieldDecorator(
-                child: UserPassField(
-              userPassController: confirmPasswordController,
-              userPassErrorText: "Password must have at least 8 characters.",
-              userPassHintText: "Re-enter Password",
-              inputType: TextInputType.visiblePassword,
-              userPassHintTextColor: Colors.purple,
-              userPassTextFieldPrefixIcon: Icons.password,
-              userPassTextFieldPrefixIconColor: Colors.purple,
-              suffixIcon: Icons.visibility_off,
-              suffixIconColor: Colors.purple,
-              onUserPassValueChange: (value) {
-                //print("Pass Value $value");
-              },
-            )),
-            const SizedBox(height: 10),
+            Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    TextFieldDecorator(
+                        child: UserIdField(
+                            userIdController: emailController,
+                            maxLines: 1,
+                            userIdErrorText: "Please enter a valid Email address.",
+                            userIdHintText: "Enter Email",
+                            inputType: TextInputType.emailAddress,
+                            userIdHintTextColor: Colors.purple,
+                            userIdTextFieldPrefixIcon: Icons.email,
+                            userIdTextFieldPrefixIconColor: Colors.purple,
+                            onUserIdValueChange: (value) {
+                            })),
+                    TextFieldDecorator(
+                        child: UserPassField(
+                          userPassController: passwordController,
+                          userPassErrorText: "Password must have at least 8 characters.",
+                          userPassHintText: "Enter Password",
+                          inputType: TextInputType.visiblePassword,
+                          userPassHintTextColor: Colors.purple,
+                          userPassTextFieldPrefixIcon: Icons.password,
+                          userPassTextFieldPrefixIconColor: Colors.purple,
+                          suffixIcon: Icons.visibility_off,
+                          suffixIconColor: Colors.purple,
+                          onUserPassValueChange: (value) {
+                            //print("Pass Value $value");
+                          },
+                        )),
+                    TextFieldDecorator(
+                        child: UserPassField(
+                          userPassController: confirmPasswordController,
+                          userPassErrorText: "Password must have at least 8 characters.",
+                          userPassHintText: "Re-enter Password",
+                          inputType: TextInputType.visiblePassword,
+                          userPassHintTextColor: Colors.purple,
+                          userPassTextFieldPrefixIcon: Icons.password,
+                          userPassTextFieldPrefixIconColor: Colors.purple,
+                          suffixIcon: Icons.visibility_off,
+                          suffixIconColor: Colors.purple,
+                          onUserPassValueChange: (value) {
+                            //print("Pass Value $value");
+                          },
+                        )),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              )
+            ),
             CustomButton(
                 buttonColor: MyTheme.signUpButtonColor,
                 buttonText: "Sign Up",
                 textColor: Colors.white,
                 handleButtonClick: () {
-                  passwordsCheck(context);
+                  //print("hey");
+                  emailCheck(context);
+                  //passwordsCheck(context);
                 }),
             const SizedBox(height: 10),
             Row(

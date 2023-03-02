@@ -4,6 +4,7 @@ import 'package:ashfaque_project/view/home_screen/chat_screen/controller/user_mo
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../bottom_nav_bar.dart';
 import 'chat_room.dart';
@@ -28,6 +29,61 @@ class _ChatPageState extends State<ChatPage> {
     required this.nextUser,
   });*/
   //String currentUser = FirebaseAuth.instance.currentUser!.uid.toString();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  _deleteChat(ChatRoomModel chatRoom) {
+    User? user = _auth.currentUser;
+
+    final _uid = user!.uid;
+    showDialog(
+        context: context,
+        builder: (context){
+          return AlertDialog(
+            actions: [
+              TextButton(
+                onPressed: () async{
+                  try {
+                    if (widget.currentUser == _uid) {
+                      await FirebaseFirestore.instance.collection('chat-rooms')
+                          .doc(chatRoom.chatRoomId).delete();
+                      await Fluttertoast.showToast(
+                        msg: "Chat deleted successfully",
+                        textColor: Colors.green,
+                        toastLength: Toast.LENGTH_LONG,
+                        backgroundColor: Colors.white,
+                        fontSize: 18,
+                      );
+                      Navigator.canPop(context) ? Navigator.pop(context) : null;
+                    }
+                    else{
+                      Fluttertoast.showToast(msg: "You cannot perform this action");
+                    }
+                  } catch(e){
+                    Fluttertoast.showToast(msg: "This task cannot be performed");
+                  } finally{}
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                        Icons.delete,
+                        color: Colors.red
+                    ),
+                    Text(
+                      "Delete",
+                      style: TextStyle(
+                          color: Colors.red
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +152,9 @@ class _ChatPageState extends State<ChatPage> {
                                 child: ListTile(
                                   onTap: (){
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => ChatRoom(currentUser: widget.currentUser, targetUser: targetUser.id.toString(), chatroom: chatroomModel, name: targetUser.name.toString(), profilePic: targetUser.profilePic.toString())));
+                                  },
+                                  onLongPress: (){
+                                    _deleteChat(chatroomModel);
                                   },
                                   leading: CircleAvatar(
                                     backgroundImage: NetworkImage(targetUser.profilePic.toString()),
